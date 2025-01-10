@@ -1,0 +1,12 @@
+{
+  "Users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "user@gemail.com",
+      "avatar": "https://api.dicebear.com/9.x/avataaars/svg",
+      "username": "User",
+      "password": "User1234"
+    }
+  ]
+}

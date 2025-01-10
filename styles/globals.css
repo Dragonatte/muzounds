@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.5);
+  border-radius: 10px;
+}
+
+div[style="opacity: 0;"] {
+  opacity: 1 !important;
+}
+
+.enter-exit-animation
+{
+  animation: enter-exit 3s ease-in-out forwards;
+}
+
+@keyframes enter-exit {
+  0% {
+    transform: translateY(-4rem);
+    opacity: 0;
+  }
+  25% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-4rem);
+    opacity: 0;
+  }
+}
