@@ -40,3 +40,5 @@ next-env.d.ts
 log.txt
 
 .idea
+
+prisma/migrations
