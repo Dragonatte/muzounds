@@ -1,8 +1,8 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { Divider, Input, Spacer } from "@nextui-org/react";
+import { Button, Divider, Input, Link, Spacer } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { User as UserType } from "@prisma/client";
 
@@ -11,6 +11,13 @@ import { EditIcon } from "@/components/icons";
 import { transformUser } from "@/actions/auth-actions";
 
 const Page: React.FC = (): React.JSX.Element => {
+  const AUTH_URL: string =
+    "https://accounts.spotify.com/authorize?" +
+    "client_id=a324dae7c6db4573b5b39189662cb991" +
+    "&response_type=code" +
+    "&redirect_uri=http://localhost:3000/dashboard" +
+    "&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state";
+
   const [user, setUser] = useState<UserType | null>(null);
 
   const { data: session } = useSession();
@@ -74,6 +81,10 @@ const Page: React.FC = (): React.JSX.Element => {
           type={"password"}
           value={"********"}
         />
+        <Spacer y={4} />
+        <Button as={Link} href={AUTH_URL}>
+          Iniciar sesión en Spotify
+        </Button>
       </section>
     </div>
   );

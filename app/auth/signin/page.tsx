@@ -2,7 +2,7 @@
 
 import React, {
   Dispatch,
-  SetStateAction,
+  SetStateAction, Suspense,
   useState,
   useTransition,
 } from "react";
@@ -62,14 +62,16 @@ const SignIn: React.FC = () => {
 
   return (
     <main className="h-dvh w-full flex items-center justify-center relative">
-      {searchParams.get("recentlySignedUp") && (
-        <div className={"absolute top-4 enter-exit-animation"}>
-          <Alert
-            description={"Revisa tu correo para verificar tu cuenta"}
-            title={"Te has registrado exitosamente"}
-          />
-        </div>
-      )}
+      <Suspense fallback={<div />}>
+        {searchParams.get("recentlySignedUp") && (
+          <div className={"absolute top-4 enter-exit-animation"}>
+            <Alert
+              description={"Revisa tu correo para verificar tu cuenta"}
+              title={"Te has registrado exitosamente"}
+            />
+          </div>
+        )}
+      </Suspense>
       <Card className="w-96 p-4">
         <CardHeader
           className={clsx(

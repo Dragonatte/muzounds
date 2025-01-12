@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   images: {
     remotePatterns: [
       {
@@ -31,6 +34,12 @@ const nextConfig = {
         hostname: 'encrypted-tbn0.gstatic.com',
         port: '',
         pathname: '/images/**',
+      },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+        port: "",
+        pathname: "/image/**",
       }
     ],
   },

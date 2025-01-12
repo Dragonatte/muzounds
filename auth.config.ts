@@ -25,9 +25,8 @@ export default {
         const isValid = await bcrypt.compare(data.password, user.password);
 
         if (!isValid) throw new Error("Invalid credentials");
-        console.log(user.emailVerified === null);
+
         if (user.emailVerified === null) {
-          console.log("pasa y no se por qué");
           const verificationToken =
             await VerificationTokenController.getByIdentifier(user.email);
 

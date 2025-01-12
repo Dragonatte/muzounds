@@ -10,8 +10,8 @@ import {
 } from "react";
 
 interface CurrSongContextType {
-  songId: number;
-  setSongId: (value: number) => void;
+  songUris: string[];
+  setSongUris: (value: string[]) => void;
 }
 
 const CurrSongContext: Context<CurrSongContextType | undefined> = createContext<
@@ -23,10 +23,10 @@ export const CurrSongProvider: FC<{ children: ReactNode }> = ({
 }: {
   children: ReactNode;
 }): JSX.Element => {
-  const [songId, setSongId] = useState<number>(0);
+  const [songUris, setSongUris] = useState<string[]>([]);
 
   return (
-    <CurrSongContext.Provider value={{ songId, setSongId }}>
+    <CurrSongContext.Provider value={{ songUris, setSongUris }}>
       {children}
     </CurrSongContext.Provider>
   );

@@ -4,6 +4,7 @@ import * as React from "react";
 import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+// @ts-ignore
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { SessionProvider } from "next-auth/react";
 

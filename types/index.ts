@@ -11,15 +11,11 @@ export type Song = {
 };
 
 export type FullSong = {
-  id: number;
+  id: string;
   title: string;
   artist: string;
   album: string;
-  year: number;
+  albumImage: string;
   duration: string;
-  genre: string;
-  composer: string[];
-  language: string;
-  image_url: string;
-  mp3_url: string;
+  uri: string;
 };
