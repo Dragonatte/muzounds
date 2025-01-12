@@ -1,7 +1,8 @@
 import type { NextAuthConfig } from "next-auth";
 
+import { subtle } from "crypto";
+
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcrypt";
 import { nanoid } from "nanoid";
 
 import { LoginSchema } from "./schema/Schemas";
@@ -9,6 +10,23 @@ import VerificationTokenController from "./controller/VerificationTokenControlle
 import { sendEmailVerification } from "./lib/mail";
 
 import UserController from "@/controller/UserController";
+
+export async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await subtle.digest("SHA-256", data);
+
+  return Buffer.from(hashBuffer).toString("hex");
+}
+
+export async function verifyPassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
+  const hashedPassword = await hashPassword(password);
+
+  return hashedPassword === hash;
+}
 
 export default {
   providers: [
@@ -34,7 +52,7 @@ export default {
         }
 
         // Compare password
-        const isValid = await compare(data.password, user.password);
+        const isValid = await verifyPassword(data.password, user.password);
 
         if (!isValid) {
           throw new Error("Invalid credentials.");
