@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
-import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcrypt";
 import { nanoid } from "nanoid";
 
 import { LoginSchema } from "./schema/Schemas";
@@ -12,49 +12,68 @@ import UserController from "@/controller/UserController";
 
 export default {
   providers: [
-    Credentials({
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
       authorize: async (credentials) => {
+        // Validate input with zod schema
         const { data, success } = LoginSchema.safeParse(credentials);
 
-        if (!success) throw new Error("Invalid credentials");
+        if (!success) {
+          throw new Error("Invalid credentials format.");
+        }
 
+        // Fetch user from database
         const user = await UserController.getUserByUser(data.username);
 
-        if (!user) throw new Error("User not found");
+        if (!user) {
+          throw new Error("User not found.");
+        }
 
-        const isValid = await bcrypt.compare(data.password, user.password);
+        // Compare password
+        const isValid = await compare(data.password, user.password);
 
-        if (!isValid) throw new Error("Invalid credentials");
+        if (!isValid) {
+          throw new Error("Invalid credentials.");
+        }
 
-        if (user.emailVerified === null) {
-          const verificationToken =
+        // Handle email verification
+        if (!user.emailVerified) {
+          const existingToken =
             await VerificationTokenController.getByIdentifier(user.email);
 
-          if (verificationToken) {
+          // Delete existing token if present
+          if (existingToken) {
             await VerificationTokenController.delete(
               user.email,
-              verificationToken.token,
+              existingToken.token,
             );
           }
 
+          // Generate new verification token
           const token = nanoid(32);
 
-          VerificationTokenController.createToken({
+          await VerificationTokenController.createToken({
             identifier: user.email,
             token,
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-          })
-            .then((isCreaded) => {
-              if (!isCreaded) throw new Error("An error occurred");
-            })
-            .catch(() => {});
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours expiration
+          });
 
+          // Send verification email
           await sendEmailVerification(user.email, token);
 
-          throw new Error("Email not verified");
+          throw new Error("Email not verified. Please check your inbox.");
         }
 
-        return user;
+        // Return user object if authentication is successful
+        return {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        };
       },
     }),
   ],
