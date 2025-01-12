@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 
 import { LoginSchema } from "./schema/Schemas";
@@ -47,13 +47,9 @@ export default {
             .then((isCreaded) => {
               if (!isCreaded) throw new Error("An error occurred");
             })
-            .catch((err) => {
-              console.error(err);
-            });
+            .catch(() => {});
 
-          const res = await sendEmailVerification(user.email, token);
-
-          console.log(res);
+          await sendEmailVerification(user.email, token);
 
           throw new Error("Email not verified");
         }
