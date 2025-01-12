@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
       expiresIn: data.body.expires_in,
     });
   } catch (error) {
-
     return NextResponse.json(
       { message: "Failed to authenticate with Spotify", error: error },
       { status: 403 },

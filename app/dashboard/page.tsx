@@ -1,6 +1,9 @@
 "use client";
+import {useClientSearchParams} from "@/hooks/useClientSearchParams";
+
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState, FC, JSX, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import SpotifyWebApi from "spotify-web-api-node";
 
 import ShowList from "@/components/ShowList";
@@ -14,8 +17,8 @@ const spotifyApi = new SpotifyWebApi({
 const Dashboard: FC = (): JSX.Element => {
   const [featuredSongs, setFeaturedSongs] = useState<Array<FullSong>>([]);
   const [newSongs, setNewSongs] = useState<Array<FullSong>>([]);
-  const params = useSearchParams();
-  const code: string = params.get("code") || "";
+  const params = useClientSearchParams();
+  const code: string = params?.get("code") || "";
   const { accessToken } = useSpotifyAuth({ code });
 
   useEffect(() => {
@@ -23,85 +26,95 @@ const Dashboard: FC = (): JSX.Element => {
   }, [code]);
 
   useEffect(() => {
-    if (accessToken) localStorage.setItem("accessToken", accessToken);
-    spotifyApi.setAccessToken(accessToken);
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+      spotifyApi.setAccessToken(accessToken);
+    }
   }, [accessToken]);
 
   useEffect(() => {
-    const topSongsPlayListId = "2AXdMCWTUwGvoyoip4CiQW";
+    const fetchFeaturedSongs = async () => {
+      try {
+        const _accessToken = localStorage.getItem("accessToken") || "";
 
-    (async () => {
-      const _accessToken = localStorage.getItem("accessToken") || "";
+        spotifyApi.setAccessToken(_accessToken);
 
-      spotifyApi.setAccessToken(_accessToken);
+        const data = await spotifyApi.getPlaylist("2AXdMCWTUwGvoyoip4CiQW");
+        const tracks = data.body.tracks.items.slice(0, 20).map((item) => {
+          const track = item.track!;
+          const biggestImage = track.album.images.reduce((biggest, current) =>
+            current.height! > biggest.height! ? current : biggest,
+          );
+          const durMin = Math.floor(track.duration_ms / 60000);
+          const durSec = Math.floor(track.duration_ms / 1000);
 
-      const data = await spotifyApi.getPlaylist(topSongsPlayListId);
-      const tracks = data.body.tracks.items.slice(0, 20).map((item) => {
-        const track = item.track!;
-        const biggestImage = track.album.images.reduce((biggest, current) =>
-          current.height! > biggest.height! ? current : biggest,
-        );
-        const durMin = Math.floor(track.duration_ms / 60000);
-        const durSec = Math.floor(track.duration_ms / 1000);
+          return {
+            id: track.id,
+            title: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name,
+            albumImage: biggestImage.url,
+            duration: `${durMin}:${String(durSec - durMin * 60).padStart(2, "0")}`,
+            uri: track.uri,
+          };
+        });
 
-        return {
-          id: track.id,
-          title: track.name,
-          artist: track.artists[0].name,
-          album: track.album.name,
-          albumImage: biggestImage.url,
-          duration: `${durMin}:${durSec - durMin * 60}`,
-          uri: track.uri,
-        };
-      });
+        setFeaturedSongs(tracks);
+      } catch (error) {
+        console.error("Error fetching featured songs:", error);
+      }
+    };
 
-      setFeaturedSongs(tracks);
-    })();
+    fetchFeaturedSongs();
   }, []);
 
   useEffect(() => {
-    (async () => {
-      const _accessToken = localStorage.getItem("accessToken") || "";
+    const fetchNewSongs = async () => {
+      try {
+        const _accessToken = localStorage.getItem("accessToken") || "";
+        spotifyApi.setAccessToken(_accessToken);
 
-      spotifyApi.setAccessToken(_accessToken);
+        const data = await spotifyApi.getNewReleases();
+        const tracks = data.body.albums.items.slice(0, 20).map((item) => {
+          const biggestImage = item.images.reduce((biggest, current) =>
+            current.height! > biggest.height! ? current : biggest,
+          );
 
-      const data = await spotifyApi.getNewReleases();
-      const tracks = data.body.albums.items.slice(0, 20).map((item) => {
-        const track = item!;
-        const biggestImage = track.images.reduce((biggest, current) =>
-          current.height! > biggest.height! ? current : biggest,
-        );
+          return {
+            id: item.id,
+            title: item.name,
+            artist: item.artists[0].name,
+            albumImage: biggestImage.url,
+            uri: item.uri,
+            album: "",
+            duration: "",
+          };
+        });
 
-        return {
-          id: track.id,
-          title: track.name,
-          artist: track.artists[0].name,
-          albumImage: biggestImage.url,
-          uri: track.uri,
-          album: "",
-          duration: "",
-        };
-      });
+        setNewSongs(tracks);
+      } catch (error) {
+        console.error("Error fetching new releases:", error);
+      }
+    };
 
-      setNewSongs(tracks);
-    })();
+    fetchNewSongs();
   }, []);
 
   return (
-    <main className="w-full overflow-x-hidden">
-      <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<p>Loading...</p>}>
+      <main className="w-full overflow-x-hidden">
         <ShowList
           collection={featuredSongs}
           subtitle="Las canciones más populares"
           title="Canciones destacadas"
         />
-      </Suspense>
-      <ShowList
-        collection={newSongs}
-        subtitle="Las canciones más recientes" // Las canciones más recientes
-        title="Nuevas canciones"
-      />
-    </main>
+        <ShowList
+          collection={newSongs}
+          subtitle="Las canciones más recientes"
+          title="Nuevas canciones"
+        />
+      </main>
+    </Suspense>
   );
 };
 

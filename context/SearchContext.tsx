@@ -32,8 +32,7 @@ export const SearchProvider: FC<{ children: ReactNode }> = ({
   );
 };
 
-export function useSearch(): SearchContextType
-{
+export function useSearch(): SearchContextType {
   const context: SearchContextType | undefined = useContext(SearchContext);
 
   if (!context) {

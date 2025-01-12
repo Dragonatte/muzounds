@@ -32,8 +32,7 @@ export const CurrSongProvider: FC<{ children: ReactNode }> = ({
   );
 };
 
-export function useCurrSong(): CurrSongContextType
-{
+export function useCurrSong(): CurrSongContextType {
   const context: CurrSongContextType | undefined = useContext(CurrSongContext);
 
   if (!context) {

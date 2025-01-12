@@ -2,7 +2,8 @@
 
 import React, {
   Dispatch,
-  SetStateAction, Suspense,
+  SetStateAction,
+  Suspense,
   useState,
   useTransition,
 } from "react";
@@ -22,6 +23,23 @@ import { useSearchParams } from "next/navigation";
 import { loginAction } from "@/actions/auth-actions";
 import { title } from "@/components/primitives";
 
+const AlertToast: React.FC = () => {
+  const searchParams = useSearchParams();
+
+  return (
+    <>
+      {searchParams.get("recentlySignedUp") && (
+        <div className={"absolute top-4 enter-exit-animation"}>
+          <Alert
+            description={"Revisa tu correo para verificar tu cuenta"}
+            title={"Te has registrado exitosamente"}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
 const SignIn: React.FC = () => {
   const [error, setError]: [
     string | null,
@@ -31,8 +49,6 @@ const SignIn: React.FC = () => {
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
-
-  const searchParams = useSearchParams();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,15 +78,8 @@ const SignIn: React.FC = () => {
 
   return (
     <main className="h-dvh w-full flex items-center justify-center relative">
-      <Suspense fallback={<div />}>
-        {searchParams.get("recentlySignedUp") && (
-          <div className={"absolute top-4 enter-exit-animation"}>
-            <Alert
-              description={"Revisa tu correo para verificar tu cuenta"}
-              title={"Te has registrado exitosamente"}
-            />
-          </div>
-        )}
+      <Suspense>
+        <AlertToast />
       </Suspense>
       <Card className="w-96 p-4">
         <CardHeader

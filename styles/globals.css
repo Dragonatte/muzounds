@@ -20,8 +20,7 @@ div[style="opacity: 0;"] {
   opacity: 1 !important;
 }
 
-.enter-exit-animation
-{
+.enter-exit-animation {
   animation: enter-exit 3s ease-in-out forwards;
 }
 

@@ -27,7 +27,8 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { useSearch } from "@/context/SearchContext";
 import {
   AddIcon,
-  FavoriteIcon, PlayIcon,
+  FavoriteIcon,
+  PlayIcon,
   PlayNextIcon,
   SongActions,
 } from "@/components/icons";
