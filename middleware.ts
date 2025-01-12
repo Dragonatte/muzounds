@@ -8,6 +8,7 @@ const { auth: middleware } = NextAuth(authConfig);
 const privateRoutes = ["/dashboard/profile", "/api/auth/[...nextauth]"];
 
 export const config = {
+  runtime: "nodejs",
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/api|trpc)(.*)"],
 };
 
