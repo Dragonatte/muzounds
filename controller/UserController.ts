@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 
 import UserModel from "@/model/UserModel";
