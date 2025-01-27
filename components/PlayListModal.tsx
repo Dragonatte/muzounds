@@ -1,6 +1,6 @@
 import { Dispatch, FC, JSX, SetStateAction } from "react";
-import { Modal, ModalContent, ModalBody, ModalHeader } from "@nextui-org/modal";
-import { Button } from "@nextui-org/react";
+import { Modal, ModalContent, ModalBody, ModalHeader } from "@heroui/modal";
+import { Button } from "@heroui/react";
 
 interface PlayListModalProps {
   open: boolean;

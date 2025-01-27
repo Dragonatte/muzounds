@@ -1,6 +1,6 @@
 "use client";
 import { FC, JSX, ChangeEvent, useState, useEffect } from "react";
-import { Input } from "@nextui-org/input";
+import { Input } from "@heroui/input";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useSession } from "next-auth/react";

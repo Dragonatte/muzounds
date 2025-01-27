@@ -1,5 +1,5 @@
 import { Dispatch, FC, JSX, SetStateAction, useEffect, useState } from "react";
-import { Accordion, AccordionItem, Button, Link } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Link } from "@heroui/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 

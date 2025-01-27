@@ -21,7 +21,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import SpotifyWebApi from "spotify-web-api-node";
 
 import { useSearch } from "@/context/SearchContext";

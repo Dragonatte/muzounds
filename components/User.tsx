@@ -8,7 +8,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { FC, JSX } from "react";
 import { signOut } from "next-auth/react";
 import { User as UserType } from "@prisma/client";

@@ -15,7 +15,7 @@ import {
   Button,
   Form,
   Alert,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";

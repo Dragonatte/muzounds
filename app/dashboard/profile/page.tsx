@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import { Button, Divider, Input, Link, Spacer } from "@nextui-org/react";
+import { Button, Divider, Input, Link, Spacer } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { User as UserType } from "@prisma/client";
 

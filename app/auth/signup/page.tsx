@@ -13,7 +13,7 @@ import {
   Input,
   Button,
   Form,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
